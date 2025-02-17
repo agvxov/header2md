@@ -15,13 +15,14 @@
     #define ECHOC(c) fputc(c, yyout)
 
     // We would like to prevent ``` being added to the top of our file.
-    bool is_start_of_file = true;
-    #define START_CODE_BLOCK do { ECHOS("\n```C\n"); }  while (0)
+    bool had_code_content = false;
+    #define START_CODE_BLOCK do {\
+            ECHOC('\n');\
+            had_code_content = false;\
+        }  while (0)
     #define END_CODE_BLOCK   do {\
-            if (!is_start_of_file) {\
+            if (had_code_content) {\
                 ECHOS("\n```\n\n");\
-            } else {\
-                is_start_of_file = false;\
             }\
         } while (0)
 %}
@@ -47,7 +48,14 @@ margin  ^{ws}*\*{ws}*/[^\/]
 \n\n+               {
                         ECHOS("\n\n");
                     }
-.|\n                {
+\n                  {
+                        ECHO;
+                    }
+.                   {
+                        if (!had_code_content) {
+                            ECHOS("\n```C\n");
+                            had_code_content = true;
+                        }
                         ECHO;
                     }
 <<EOF>>             {
@@ -89,13 +97,13 @@ margin  ^{ws}*\*{ws}*/[^\/]
 }
 
 <IN_OMIT>{
-.|\n    { ; }
-\/\/    {
-            BEGIN IN_COMMENT;
-        }
-\/\*    {
-            BEGIN IN_MULTILINE_COMMENT;
-        }
+.|\n                { ; }
+\n*\/\/{ws}*        {
+                        BEGIN IN_COMMENT;
+                    }
+\n*\/\*{ws}*        {
+                        BEGIN IN_MULTILINE_COMMENT;
+                    }
 }
 
 %%
