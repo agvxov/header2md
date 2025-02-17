@@ -1,4 +1,4 @@
-/* @OMMIT
+/* @OMIT
  * This is an obnoctious copyright notice, clearly written by a blind man.
  */
 #ifndef TEST_H
@@ -19,5 +19,5 @@ void fizzbuzz(int i);
 
 void wicked(const char * const str, const size_t n);
 
-// @OMMIT
+// @OMIT
 #endif

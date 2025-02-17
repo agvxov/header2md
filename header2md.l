@@ -27,7 +27,7 @@
 %}
 
 ws    [ \t\r\v\f]
-%x IN_COMMENT IN_MULTILINE_COMMENT OMMIT
+%x IN_COMMENT IN_MULTILINE_COMMENT IN_OMIT
 %option noyywrap nodefault
 
 %%
@@ -63,8 +63,8 @@ ws    [ \t\r\v\f]
 \\\n                {
                         ECHOC('\n');
                     }
-\@OMMIT             {
-                        BEGIN OMMIT;
+\@OMIT              {
+                        BEGIN IN_OMIT;
                     }
 \n+                 {
                         START_CODE_BLOCK;
@@ -79,15 +79,15 @@ ws    [ \t\r\v\f]
                         START_CODE_BLOCK;
                         BEGIN INITIAL;
                     }
-\@OMMIT             {
-                        BEGIN OMMIT;
+\@OMIT              {
+                        BEGIN IN_OMIT;
                     }
 .|\n                {
                         ECHO;
                     }
 }
 
-<OMMIT>{
+<IN_OMIT>{
 .|\n    { ; }
 \/\/    {
             BEGIN IN_COMMENT;
