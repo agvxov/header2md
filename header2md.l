@@ -1,7 +1,6 @@
 /* @BAKE
     flex -o $*.yy.c $@
     gcc -o $*.out $*.yy.c
-    ./$*.out test.h
    @STOP
 */
 %{
