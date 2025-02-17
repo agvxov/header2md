@@ -4,8 +4,8 @@
 #ifndef TEST_H
 #define TEST_H
 /* This comment describes the functions below,
-    in long form.
-*/
+ *  in long form.
+ */
 void foo(void);
 void bar(void);
 

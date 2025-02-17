@@ -6,6 +6,7 @@
 */
 %{
     #include <stdio.h>
+    // XXX: as of now, flex does not compile under C23
     #include <stdbool.h>
 
     #define ECHOS(s) do {                            \
@@ -14,6 +15,8 @@
     } while (0)
     #define ECHOC(c) fputc(c, yyout)
 
+    // We would like to prevent ``` being added to the top of our file.
+    bool is_start_of_file = true;
     #define START_CODE_BLOCK do { ECHOS("\n```C\n"); }  while (0)
     #define END_CODE_BLOCK   do {\
             if (!is_start_of_file) {\
@@ -22,11 +25,10 @@
                 is_start_of_file = false;\
             }\
         } while (0)
-
-    bool is_start_of_file = true;
 %}
 
-ws    [ \t\r\v\f]
+ws      [ \t\r\v\f]
+margin  ^{ws}*\*{ws}*/[^\/]
 %x IN_COMMENT IN_MULTILINE_COMMENT IN_OMIT
 %option noyywrap nodefault
 
@@ -60,7 +62,7 @@ ws    [ \t\r\v\f]
 .                   {
                         ECHO;
                     }
-\\\n                {
+\\\n                { // K&R multiline comment
                         ECHOC('\n');
                     }
 \@OMIT              {
@@ -74,7 +76,7 @@ ws    [ \t\r\v\f]
 
 <IN_MULTILINE_COMMENT>{
 ^{ws}*              { ; }
-^{ws}*\*{ws}*[^\/]  { ; }
+{margin}            { ; }
 \*\/\n*             {
                         START_CODE_BLOCK;
                         BEGIN INITIAL;
