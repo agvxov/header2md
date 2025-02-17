@@ -1,4 +1,5 @@
-/* This is an obnoctious copyright notice, clearly written by a blind man.
+/* @OMMIT
+ * This is an obnoctious copyright notice, clearly written by a blind man.
  */
 #ifndef TEST_H
 #define TEST_H
@@ -8,15 +9,15 @@
 void foo(void);
 void bar(void);
 
-// this function is exceptional somehow
+// This function is exceptional somehow.
 void fizzbuzz(int i);
 
 
 
-// this is some real strange newlininging
+// This is some real strange newlininging.
 
 
 void wicked(const char * const str, const size_t n);
 
-
+// @OMMIT
 #endif

@@ -27,57 +27,74 @@
 %}
 
 ws    [ \t\r\v\f]
-%x IN_COMMENT IN_MULTILINE_COMMENT
+%x IN_COMMENT IN_MULTILINE_COMMENT OMMIT
 %option noyywrap nodefault
 
 %%
 
 <INITIAL>{
-^{ws}*          { ; }
-\n*\/\/{ws}*    {
-                    END_CODE_BLOCK;
-                    BEGIN IN_COMMENT;
-                    
-                }
-\n*\/\*{ws}*    {
-                    END_CODE_BLOCK;
-                    BEGIN IN_MULTILINE_COMMENT;
-                }
-\n\n+           {
-                    ECHOS("\n\n");
-                }
-.|\n            {
-                    ECHO;
-                }
-<<EOF>>         {
-                    END_CODE_BLOCK;
-                    return 0;
-                }
+^{ws}*              { ; }
+\n*\/\/{ws}*        {
+                        END_CODE_BLOCK;
+                        BEGIN IN_COMMENT;
+                        
+                    }
+\n*\/\*{ws}*        {
+                        END_CODE_BLOCK;
+                        BEGIN IN_MULTILINE_COMMENT;
+                    }
+\n\n+               {
+                        ECHOS("\n\n");
+                    }
+.|\n                {
+                        ECHO;
+                    }
+<<EOF>>             {
+                        END_CODE_BLOCK;
+                        return 0;
+                    }
 }
 
 <IN_COMMENT>{
-^{ws}*          { ; }
-.               {
-                    ECHO;
-                }
-\\\n            {
-                    ECHOC('\n');
-                }
-\n+             {
-                    START_CODE_BLOCK;
-                    BEGIN INITIAL;
-                }
+^{ws}*              { ; }
+.                   {
+                        ECHO;
+                    }
+\\\n                {
+                        ECHOC('\n');
+                    }
+\@OMMIT             {
+                        BEGIN OMMIT;
+                    }
+\n+                 {
+                        START_CODE_BLOCK;
+                        BEGIN INITIAL;
+                    }
 }
 
 <IN_MULTILINE_COMMENT>{
-^{ws}*          { ; }
-\*\/\n*         {
-                    START_CODE_BLOCK;
-                    BEGIN INITIAL;
-                }
-.|\n            {
-                    ECHO;
-                }
+^{ws}*              { ; }
+^{ws}*\*{ws}*[^\/]  { ; }
+\*\/\n*             {
+                        START_CODE_BLOCK;
+                        BEGIN INITIAL;
+                    }
+\@OMMIT             {
+                        BEGIN OMMIT;
+                    }
+.|\n                {
+                        ECHO;
+                    }
+}
+
+<OMMIT>{
+.|\n    { ; }
+\/\/    {
+            BEGIN IN_COMMENT;
+        }
+\/\*    {
+            BEGIN IN_MULTILINE_COMMENT;
+        }
 }
 
 %%
