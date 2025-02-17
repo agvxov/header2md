@@ -101,11 +101,25 @@ margin  ^{ws}*\*{ws}*/[^\/]
 
 %%
 
+void usage(void) {
+    puts(
+        "header2md <file>\n"
+        "    Convert C source file to markdown and print to stdout."
+    );
+}
+
 signed main(int argc, char * argv[]) {
     if (argc < 2) {
-        puts("header2md <file>");
+        usage();
         return 1;
     }
+
+    if (!strcmp(argv[1], "-h")
+    ||  !strcmp(argv[1], "--help")) {
+        usage();
+        return 0;
+    }
+
     yyin = fopen(argv[1], "r");
     if (!yyin) {
         printf("Failed to open '%s'.", argv[1]);
