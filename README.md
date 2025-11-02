@@ -7,8 +7,8 @@ The basic idea is that comments become plain text
 while source code is packed inside fenced code blocks.
 
 The text you place inside comments is generally not tampered with except:
-+ leading whitespace is removed
-+ typical C comment margins of the form " * " are removed;
+* leading whitespace is removed
+* typical C comment margins of the form " * " are removed;
 however, this does mean that for dot lists you have to use 2 stars
 
 More than 2 empty lines in the source code will collapse into 2 empty lines.
