@@ -111,7 +111,9 @@ margin  ^{ws}*\*{ws}*/[^\/]
 void usage(void) {
     puts(
         "header2md <file>\n"
-        "    Convert C source file to markdown and print to stdout."
+        "    Convert C source file to markdown and print to stdout.\n"
+        "    Comments become plain text while code is wrapped in fenced code blocks.\n"
+        "    The special directive @OMIT can be used to hide code until the next comment."
     );
 }
 
