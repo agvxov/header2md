@@ -16,14 +16,14 @@
 
     // We would like to prevent ``` being added to the top of our file.
     bool had_code_content = false;
-    #define START_CODE_BLOCK do {\
-            ECHOC('\n');\
-            had_code_content = false;\
+    #define START_CODE_BLOCK do {     \
+            ECHOC('\n');              \
+            had_code_content = false; \
         }  while (0)
-    #define END_CODE_BLOCK   do {\
-            if (had_code_content) {\
-                ECHOS("\n```\n\n");\
-            }\
+    #define END_CODE_BLOCK do {     \
+            if (had_code_content) { \
+                ECHOS("\n```\n\n"); \
+            }                       \
         } while (0)
 %}
 
